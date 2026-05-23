@@ -44,6 +44,18 @@ services:
       redis:
         condition: service_healthy
 
+  test:
+    build: .
+    command: >
+      sh -c "pip install -r requirements-test.txt -q && pytest tests/ -v"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file: .env
+    profiles: [test]
+
   celery_beat:
     build: .
     command: celery -A app.tasks.celery_app beat --loglevel=info --scheduler celery.beat.PersistentScheduler
