@@ -2,6 +2,12 @@
 
 Event tracking with WebSocket push, hourly aggregation via Celery, and daily AI insights powered by Groq.
 
+Track events through a REST endpoint and stream them to dashboards over WebSocket. A live dashboard page is served at `/dashboard`.
+
+**Stack:** FastAPI, WebSocket, PostgreSQL, Celery, Redis, Groq.
+
+> Demo project: the event and WebSocket endpoints have no authentication. Add API keys or JWT before exposing them publicly.
+
 ## Architecture
 
 ```
@@ -75,6 +81,10 @@ real-time-analytics/
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
+├── requirements-test.txt
+├── static/
+│   └── dashboard.html        # live dashboard (served at /dashboard)
+├── tests/                    # pytest suite
 └── app/
     ├── main.py
     ├── config.py
@@ -97,13 +107,22 @@ real-time-analytics/
 
 ```bash
 # 1. Copy and fill environment variables
-copy .env.example .env
+cp .env.example .env          # Windows (cmd): copy .env.example .env
 
 # 2. Build and start all services
 docker compose up --build
 ```
 
-API available at `http://localhost:8000` — interactive docs at `http://localhost:8000/docs`.
+API available at `http://localhost:8000` — interactive docs at `http://localhost:8000/docs` — live dashboard at `http://localhost:8000/dashboard`.
+
+## Tests
+
+```bash
+pip install -r requirements.txt -r requirements-test.txt
+pytest
+```
+
+Tests use an in-memory SQLite database, so no PostgreSQL or Redis is needed.
 
 ## Environment Variables
 
@@ -120,7 +139,7 @@ API available at `http://localhost:8000` — interactive docs at `http://localho
 git init
 git add .
 git commit -m "feat: initial real-time analytics system"
-git remote add origin https://github.com/<user>/<repo>.git
+git remote add origin https://github.com/Gianpi96/real-time-analytics.git
 git branch -M main
 git push -u origin main
 ```
